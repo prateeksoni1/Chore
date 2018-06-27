@@ -39,8 +39,8 @@ class ChoresListAdapter(var context: Context, var choresList: ArrayList<Chore>) 
 
         fun bindView(chore: Chore) {
             choreName.text = chore.name
-            choreAssBy.text = chore.assBy
-            choreAssTo.text = chore.assTo
+            choreAssBy.text = "By: " + chore.assBy
+            choreAssTo.text = "To: " + chore.assTo
             choreDate.text = chore.showHumanDate(chore.time!!)
         }
 
