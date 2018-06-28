@@ -1,14 +1,19 @@
 package com.example.prateek.chore.data
 
+import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prateek.chore.R
+import com.example.prateek.chore.activity.ChoreListActivity
 import com.example.prateek.chore.model.Chore
 
 class ChoresListAdapter(var context: Context, var choresList: ArrayList<Chore>) : RecyclerView.Adapter<ChoresListAdapter.ViewHolder>() {
@@ -52,7 +57,8 @@ class ChoresListAdapter(var context: Context, var choresList: ArrayList<Chore>) 
 
                 }
                 choreEdit.id -> {
-                    Toast.makeText(context, "Edited", Toast.LENGTH_SHORT).show()
+                    editChore(clone)
+
                 }
 
 
@@ -63,6 +69,36 @@ class ChoresListAdapter(var context: Context, var choresList: ArrayList<Chore>) 
         fun deleteChore(id: Int) {
             var handler = ChoresDatabaseHandler(context)
             handler.deleteChore(id)
+        }
+
+        fun editChore(chore: Chore) {
+
+            lateinit var dialog: AlertDialog
+            lateinit var dialogBuilder: AlertDialog.Builder
+            var handler = ChoresDatabaseHandler(context)
+
+            var view = LayoutInflater.from(context).inflate(R.layout.dialog, null)
+            var choreName = view.findViewById<TextView>(R.id.dialogChoreName)
+            var choreAssTo = view.findViewById<TextView>(R.id.dialogAssToTxt)
+            var choreAssby = view.findViewById<TextView>(R.id.dialogAssByTxt)
+            var savebtn = view.findViewById<TextView>(R.id.dialogSavebtn)
+
+            dialogBuilder = AlertDialog.Builder(context).setView(view)
+            dialog = dialogBuilder.create()
+            dialog.show()
+
+            savebtn.setOnClickListener {
+                if(choreName.text.isNotEmpty() && choreAssTo.text.isNotEmpty() && choreAssby.text.isNotEmpty()) {
+
+                    chore.name = choreName.text.toString()
+                    chore.assBy = choreAssby.text.toString()
+                    chore.assTo = choreAssTo.text.toString()
+                    handler.updateChore(chore)
+                    notifyItemChanged(adapterPosition, chore)
+                    dialog.dismiss()
+
+                }
+            }
         }
 
         fun bindView(chore: Chore) {
