@@ -51,6 +51,7 @@ class ChoresDatabaseHandler(context: Context) :
         }
 
         var chore = Chore()
+        chore.id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
         chore.name = cursor.getString(cursor.getColumnIndex(KEY_NAME))
         chore.assTo = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNED_TO))
         chore.assBy = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNED_BY))
@@ -72,6 +73,7 @@ class ChoresDatabaseHandler(context: Context) :
         if(cursor.moveToFirst()) {
             do {
                 var chore = Chore()
+                chore.id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
                 chore.name = cursor.getString(cursor.getColumnIndex(KEY_NAME))
                 chore.assTo = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNED_TO))
                 chore.assBy = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNED_BY))
@@ -94,9 +96,9 @@ class ChoresDatabaseHandler(context: Context) :
         return db.update(TABLE_NAME, values, "$KEY_ID=?", arrayOf(chore.id.toString()))
     }
 
-    fun deleteChore(chore: Chore) {
+    fun deleteChore(id: Int) {
         var db = writableDatabase
-        db.delete(TABLE_NAME, "$KEY_ID=?", arrayOf(chore.id.toString()))
+        db.delete(TABLE_NAME, "$KEY_ID=?", arrayOf(id.toString()))
         db.close()
     }
 

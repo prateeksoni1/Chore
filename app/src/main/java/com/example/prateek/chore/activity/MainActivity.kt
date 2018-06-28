@@ -1,6 +1,5 @@
 package com.example.prateek.chore.activity
 
-import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.view.View
 import android.widget.Toast
 import com.example.prateek.chore.R
 import com.example.prateek.chore.data.ChoresDatabaseHandler
-import com.example.prateek.chore.data.ChoresListAdapter
 import com.example.prateek.chore.model.Chore
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -31,8 +29,10 @@ class MainActivity : AppCompatActivity() {
 
         choresDatabaseHandler = ChoresDatabaseHandler(this)
 
+        checkDB()
+
         button.setOnClickListener() {
-            if(choreName.text.isNotEmpty() && asstotxt.text.isNotEmpty() && assbytxt.text.isNotEmpty()) {
+            if(dialogChoreName.text.isNotEmpty() && dialogAssToTxt.text.isNotEmpty() && dialogAssByTxt.text.isNotEmpty()) {
 
                 progressBar.visibility = View.VISIBLE
                 progresstext.visibility = View.VISIBLE
@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity() {
 //                progressDialog!!.setMessage("Saving...")
 //                progressDialog!!.show()
                 var chore = Chore()
-                chore.name = choreName.text.toString()
-                chore.assBy = assbytxt.text.toString()
-                chore.assTo = asstotxt.text.toString()
+                chore.name = dialogChoreName.text.toString()
+                chore.assBy = dialogAssByTxt.text.toString()
+                chore.assTo = dialogAssToTxt.text.toString()
 
                 choresDatabaseHandler.createChore(chore)
 
@@ -64,23 +64,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
 
-
-//        var chore = Chore()
-//        chore.name = "DieHard"
-//        chore.assTo = "Pro"
-//        chore.assBy = "Pro"
-//
-//
-//        //choresDatabaseHandler.createChore(chore)
-//
-//        var chores = choresDatabaseHandler.readChores()
-//
-//        for(c in chores) {
-//            Log.d("DB ITEM: ", "Name: ${c.name}, Time: ${c.time}")
-//        }
-
-//        var chores = choresDatabaseHandler.readAChore(2)
-//        Log.d("CHORE", "ID: ${chores.id.toString()}, Name: ${chores.name}, Time: ${chores.time.toString()}")
+    fun checkDB() {
+        if(choresDatabaseHandler.getChoresCount() > 0) {
+            startActivity(Intent(this, ChoreListActivity::class.java))
+        }
     }
 }
